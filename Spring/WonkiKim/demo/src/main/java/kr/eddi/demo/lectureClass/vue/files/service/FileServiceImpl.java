@@ -30,8 +30,11 @@ public class FileServiceImpl implements FileService {
                 String originalFileName = multipartFile.getOriginalFilename();
                 log.info("requestFileName: " + originalFileName);
 
+                // src를 기준으로 나와야 하기 때문에 3칸 올라가야함
+                // 어차피 나중에 AWS S3로 바꿔야 합니다.
+                // 현재 이 기법은 꼼수
                 FileOutputStream writer = new FileOutputStream(
-                        "../../../Vue/WonkiKim/frontend/src/assets/uploadImgs/" +
+                        "../../../Vue/SanghoonLee/frontend/src/assets/uploadImgs/" +
                                 multipartFile.getOriginalFilename()
                 );
 

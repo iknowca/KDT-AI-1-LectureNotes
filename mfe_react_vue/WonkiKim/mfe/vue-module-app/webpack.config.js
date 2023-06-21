@@ -59,7 +59,9 @@ module.exports = (_, argv) => ({
       filename: "remoteEntry.js",
       exposes: {
         './Sample': './src/bootstrap',
+        './Store': './src/store/board/BoardModule'
       },
+      shared: require("./package.json").dependencies
     }),
     new HtmlWebPackPlugin({
       template: path.resolve(__dirname, './public/index.html'),
@@ -72,7 +74,7 @@ module.exports = (_, argv) => ({
       directory: path.join(__dirname),
     },
     compress: true,
-    port: 3002,
+    port: 3001,
     hot: true,
     headers: {
       'Access-Control-Allow-Origin': '*',

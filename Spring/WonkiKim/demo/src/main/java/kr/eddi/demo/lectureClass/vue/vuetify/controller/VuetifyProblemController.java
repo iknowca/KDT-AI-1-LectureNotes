@@ -9,10 +9,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/give-me")
 public class VuetifyProblemController {
+
     @GetMapping("/image-path")
-    public String returnImagePath() {
+    public String returnImagePath () {
         log.info("returnImagePath()");
 
-        return "vue.png";
+        return "loz.jpg";
     }
 }

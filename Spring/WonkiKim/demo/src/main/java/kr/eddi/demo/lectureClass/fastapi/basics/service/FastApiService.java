@@ -4,6 +4,4 @@ public interface FastApiService {
     void stringRequest(String fastapiRequestUrl);
 
     Integer integerRequest(String fastapiRequestUrl);
-
-    Integer requestRandomNumber(String fastapiRequestUrl);
 }
