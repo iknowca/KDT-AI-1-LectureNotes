@@ -1,18 +1,20 @@
+const path = require("path")
 const HtmlWebPackPlugin = require("html-webpack-plugin");
 const ModuleFederationPlugin = require("webpack/lib/container/ModuleFederationPlugin");
+const ExternalTemplateRemotesPlugin = require('external-remotes-plugin')
 
 const deps = require("./package.json").dependencies;
 module.exports = (_, argv) => ({
+  mode: 'development',
+  entry: './src/index',
   output: {
-    publicPath: "http://localhost:8080/",
+    publicPath: "auto",
   },
-
   resolve: {
     extensions: [".tsx", ".ts", ".jsx", ".js", ".json"],
   },
-
   devServer: {
-    port: 8080,
+    port: 3005,
     historyApiFallback: true,
   },
 
@@ -41,7 +43,7 @@ module.exports = (_, argv) => ({
 
   plugins: [
     new ModuleFederationPlugin({
-      name: "react_product_board",
+      name: "react_product_app",
       filename: "remoteEntry.js",
       remotes: {},
       exposes: {},
@@ -58,7 +60,9 @@ module.exports = (_, argv) => ({
       },
     }),
     new HtmlWebPackPlugin({
-      template: "./src/index.html",
+      template: "./public/index.html",
+      chunks: ['main'],
     }),
+    new ExternalTemplateRemotesPlugin(),
   ],
 });
