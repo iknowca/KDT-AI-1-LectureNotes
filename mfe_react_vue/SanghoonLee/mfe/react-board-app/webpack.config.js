@@ -1,24 +1,23 @@
 const path = require("path")
 const HtmlWebPackPlugin = require("html-webpack-plugin");
 const ModuleFederationPlugin = require("webpack/lib/container/ModuleFederationPlugin");
-const ExternalTemplateRemotePlugin = require('external-remotes-plugin')
+const ExternalTemplateRemotesPlugin = require('external-remotes-plugin')
 
-const deps = require("./package.json").dependencies
-
+const deps = require("./package.json").dependencies;
 module.exports = (_, argv) => ({
-  mode: "development",
-  entry: "./src/index",
+  mode: 'development',
+  entry: './src/index',
+  output: {
+    publicPath: "auto",
+  },
   resolve: {
-    extensions: [".tsx", ".ts", ".jsx", ".js", ".json"]
+    extensions: [".tsx", ".ts", ".jsx", ".js", ".json"],
   },
   devServer: {
-    //static: path.join(__dirname, 'dist'),
-    port: 3000,
+    port: 3004,
     historyApiFallback: true,
   },
-  output: {
-    publicPath: 'auto',
-  },
+
   module: {
     rules: [
       {
@@ -37,30 +36,17 @@ module.exports = (_, argv) => ({
         exclude: /node_modules/,
         use: {
           loader: "babel-loader",
-        }
+        },
       },
-      // {
-      //   test: /\.jsx?$/,
-      //   loader: "babel-loader",
-      //   exclude: /node_modules/,
-      //   options: {
-      //     presets: ['@babel/preset-react']
-      //   },
-      // },
     ],
   },
+
   plugins: [
-    new HtmlWebPackPlugin({
-      template: "./public/index.html",
-    }),
-    new ExternalTemplateRemotePlugin(),
     new ModuleFederationPlugin({
-      name: "containerApp",
-      remotes: {
-        vueModuleApp: 'vueModuleApp@http://localhost:3001/remoteEntry.js',
-        vueNavigationApp: 'vueNavigationApp@http://localhost:3002/remoteEntry.js',
-        reactModuleApp: 'reactModuleApp@http://localhost:3003/remoteEntry.js',
-      },
+      name: "react_board_app",
+      filename: "remoteEntry.js",
+      remotes: {},
+      exposes: {},
       shared: {
         ...deps,
         react: {
@@ -70,8 +56,13 @@ module.exports = (_, argv) => ({
         "react-dom": {
           singleton: true,
           requiredVersion: deps["react-dom"],
-        }
-      }
+        },
+      },
     }),
+    new HtmlWebPackPlugin({
+      template: "./public/index.html",
+      chunks: ['main'],
+    }),
+    new ExternalTemplateRemotesPlugin(),
   ],
 });
