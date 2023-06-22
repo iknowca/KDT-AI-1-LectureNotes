@@ -1,4 +1,3 @@
-const path = require("path")
 const HtmlWebPackPlugin = require("html-webpack-plugin");
 const ModuleFederationPlugin = require("webpack/lib/container/ModuleFederationPlugin");
 const ExternalTemplateRemotesPlugin = require('external-remotes-plugin')
@@ -16,8 +15,13 @@ module.exports = (_, argv) => ({
   devServer: {
     port: 3005,
     historyApiFallback: true,
+    hot: true,
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, PATCH, OPTIONS',
+      'Access-Control-Allow-Headers': 'X-Requested-With, content-type, Authroization',
+    }
   },
-
   module: {
     rules: [
       {
@@ -38,14 +42,18 @@ module.exports = (_, argv) => ({
           loader: "babel-loader",
         },
       },
+      {
+        test: /\.(js|jsx)$/,
+        exclude: /(node_modules|bower_components)/,
+        loader: "babel-loader",
+        options: { presets: ['@babel/env', '@babel/preset-react']},
+      },
     ],
   },
-
   plugins: [
     new ModuleFederationPlugin({
-      name: "react_product_app",
+      name: "reactZustandTodoApp",
       filename: "remoteEntry.js",
-      remotes: {},
       exposes: {},
       shared: {
         ...deps,
